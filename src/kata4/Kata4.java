@@ -9,7 +9,13 @@ public class Kata4 {
     public static void main(String[] args) throws SQLException{
         PersonLoader loader = new DatabasePersonLoader(createConnection());
         HistogramBuilder<Person> builder = new HistogramBuilder<>(loader.load());
-        new ConsoleHistogramViewer<Person>().show(builder.build());
+        new ConsoleHistogramViewer<String>().show(builder.build(new AttributeExtractor<Person, String>() {
+
+            @Override
+            public String extract(Person entity) {
+                return entity.getMail().getDomain();
+            }
+        }));
     }
 
     private static Connection createConnection() throws SQLException {
